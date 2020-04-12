@@ -1,0 +1,4 @@
+HEIGHT = 400
+WIDTH = 550
+COLOR_BG = '#6983aa'
+FRAME_BG = '#80c1ff'
