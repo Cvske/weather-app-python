@@ -1,0 +1,49 @@
+import tkinter as tk
+import requests
+import settings
+
+def response(weather):
+	try:
+		city = weather['name']
+		desc = weather['weather'][0]['description']
+		wind = weather['wind']['speed']
+		temp = weather['main']['temp']
+
+		str = "City: {}\n Conditions: {}\n Temperature (°C): {}\n Wind speed: {}km/h\n".format(city, desc, temp, wind)
+	except:
+		str = 'An error has occured!'
+
+	return str
+
+def get_weather(city):
+	key = 'c148beb08e8824df7bcee8284eb8ffdc'
+	url = 'https://api.openweathermap.org/data/2.5/weather'
+	params = {'APPID': key, 'q': city, 'units': 'Metric', 'lang': 'en'}
+	url = requests.get(url, params=params)
+	weather = url.json()
+	label['text'] = response(weather)
+
+
+tkMain = tk.Tk()
+tkMain.title('WHATS THE WEATHER LIKE TODAY?')
+tkMain['bg'] = settings.COLOR_BG
+canvas = tk.Canvas(tkMain, bg=settings.COLOR_BG, height=settings.HEIGHT, width=settings.WIDTH)
+canvas.pack()
+
+
+frame = tk.Frame(tkMain, bg=settings.FRAME_BG, bd=6)
+frame.place(relx=0.5, rely=0.1, relwidth=0.75, relheight=0.1, anchor='n')
+
+entry = tk.Entry(frame, font=38)
+entry.place(relwidth=0.65, relheight=1)
+
+button = tk.Button(frame, text="Get Weather", font=38, command=lambda: get_weather(entry.get()))
+button.place(relx=0.7, relheight=1, relwidth=0.3)
+
+lower_frame = tk.Frame(tkMain, bg=settings.FRAME_BG, bd=10)
+lower_frame.place(relx=0.5, rely=0.25, relwidth=0.75, relheight=0.6, anchor='n')
+
+label = tk.Label(lower_frame)
+label.place(relwidth=1, relheight=1)
+
+tkMain.mainloop()
